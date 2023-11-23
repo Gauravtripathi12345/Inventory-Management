@@ -1,5 +1,5 @@
 
-import path from 'path';
+import path, { parse } from 'path';
 import ProductModel from '../models/product.model.js';
 
 export default class ProductController {
@@ -11,15 +11,15 @@ export default class ProductController {
     }
 
     getAddForm(req, res) {
-        return res.render("new-product");
+        return res.render("new-product", { errorMessage: null });
     }
 
-    addNewProduct(req, res) {
+    addNewProduct(req, res, next) {
         // access data from form.
-        console.log(req.body);
+        // console.log(req.body);
         ProductModel.add(req.body);
         let products = ProductModel.get();
-        res.render('products', {products: products})
+        res.render('products', { products: products })
     }
 }
 
