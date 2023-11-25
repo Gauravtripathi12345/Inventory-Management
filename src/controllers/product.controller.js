@@ -27,22 +27,36 @@ export default class ProductController {
         const id = req.params.id;
         const productFound = ProductModel.getById(id);
         // console.log(productFound);
-        if(productFound){
-            res.render('update-product',{
+        if (productFound) {
+            res.render('update-product', {
                 product: productFound,
                 errorMessage: null,
             });
         }
         // else return errors.
-        else{
+        else {
             res.status(401).send("Product not found");
         }
     }
 
-    postUpdateProduct(req, res){
+    postUpdateProduct(req, res) {
         ProductModel.update(req.body);
         let products = ProductModel.get();
         res.render('products', { products: products })
+    }
+
+    deleteProduct(req, res) {
+        const id = req.params.id;
+        console.log("ID check kr rha hu", id);
+        const productFound = ProductModel.getById(id);
+        if (!productFound) {
+            // console.log("main ayah hu", productFound);
+             return res.status(401).send("Product not found");
+        }
+        ProductModel.delete(id);
+        var products = ProductModel.get();
+        console.log("ARNAVA DADA");
+        res.render('products', { products: products })     
     }
 }
 
