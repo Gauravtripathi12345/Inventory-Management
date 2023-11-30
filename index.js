@@ -4,6 +4,7 @@ import path from 'path';
 import ProductController from './src/controllers/product.controller.js';
 import ejsLayouts from 'express-ejs-layouts';
 import validationMiddleware from './src/middlewares/validation.middleware.js';
+import { uploadFile } from './src/middlewares/file-upload.middleware.js';
 const server = express();
 
 server.use(express.static('public'));
@@ -24,11 +25,10 @@ server.get('/new', productController.getAddForm);
 server.get('/update-product/:id', productController.getUpdateProductView);
 server.post('/delete-product/:id', productController.deleteProduct);
 
-server.post('/', validationMiddleware, productController.addNewProduct)
+server.post('/', uploadFile.single('imageUrl'), validationMiddleware, productController.addNewProduct)
 server.post('/update-product', productController.postUpdateProduct)
 
 server.use(express.static('src/views'));
-
 
 server.listen(3400, () => {
     console.log("Server is running at 3400");

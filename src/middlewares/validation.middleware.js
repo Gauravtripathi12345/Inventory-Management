@@ -1,13 +1,20 @@
 import { body, validationResult } from 'express-validator';
 
 const validateRequest = async (req, res, next) => {
-    console.log(req.body);
+    // console.log(req.body);
     // Steps involved in Express validator code:
     // 1. Set up the rules for validation
     const rules = [
         body('name').notEmpty().withMessage("Name is required"),
         body('price').isFloat({ gt: 0 }).withMessage("Price should be a positive value"),
-        body('imageUrl').isURL().withMessage("Invalid url")
+        // body('imageUrl').isURL().withMessage("Invalid url")
+        body('imageUrl')
+            .custom((value, { req }) => {
+                if (!req.file) {
+                    throw new Error('Image is required');
+                }
+                return true;
+            }),
     ];
 
     // 2. Run those rules
@@ -16,7 +23,7 @@ const validateRequest = async (req, res, next) => {
 
     // 3. check if there are any errors after running the rules
     var validationErrors = validationResult(req); // Extracts the validation errors of an express request
-    console.log(validationErrors);
+    // console.log(validationErrors);
 
     // 4. if errors, return the error message
     if (!validationErrors.isEmpty()) {

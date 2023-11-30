@@ -5,7 +5,7 @@ import ProductModel from '../models/product.model.js';
 export default class ProductController {
     getProducts(req, res) {
         let products = ProductModel.get();
-        console.log(products);
+        // console.log("PP",products);
         res.render("products", { products: products });
         // return res.sendFile(path.join(path.resolve(), "src", "views", "products.html"))
     }
@@ -15,10 +15,12 @@ export default class ProductController {
     }
 
     addNewProduct(req, res, next) {
-        // access data from form.
-        // console.log(req.body);
-        ProductModel.add(req.body);
+        // console.log("REQUEST BODY", req.body);
+        const { name, desc, price } = req.body;
+        const imageUrl = 'images/' + req.file.filename;
+        ProductModel.add(name, desc, price, imageUrl);
         let products = ProductModel.get();
+        console.log("Data after addition:", products); // it is working
         res.render('products', { products: products })
     }
 
@@ -47,16 +49,15 @@ export default class ProductController {
 
     deleteProduct(req, res) {
         const id = req.params.id;
-        console.log("ID check kr rha hu", id);
         const productFound = ProductModel.getById(id);
+        console.log("productFound", productFound);
         if (!productFound) {
-            // console.log("main ayah hu", productFound);
-             return res.status(401).send("Product not found");
+            return res.status(401).send("Product not found");
         }
         ProductModel.delete(id);
         var products = ProductModel.get();
-        console.log("ARNAVA DADA");
-        res.render('products', { products: products })     
+
+        res.render('products', { products: products })
     }
 }
 
