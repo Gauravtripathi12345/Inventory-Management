@@ -2,6 +2,7 @@
 import express from 'express';
 import path from 'path';
 import ProductController from './src/controllers/product.controller.js';
+import UserController from './src/controllers/user.controller.js';
 import ejsLayouts from 'express-ejs-layouts';
 import validationMiddleware from './src/middlewares/validation.middleware.js';
 import { uploadFile } from './src/middlewares/file-upload.middleware.js';
@@ -19,7 +20,9 @@ server.use(ejsLayouts);
 server.use(express.json());
 // create an instance of ProductController
 const productController = new ProductController();
+const usersController = new UserController();
 
+server.get('/register', usersController.getResgister);
 server.get('/', productController.getProducts);
 server.get('/new', productController.getAddForm);
 server.get('/update-product/:id', productController.getUpdateProductView);
