@@ -15,7 +15,7 @@ const server = express();
 
 server.use(express.static('public'));
 server.use(cookieParser());
-server.use(setLastVisit);
+// server.use(setLastVisit);
 server.use(session({
     secret: 'SecretKey',
     resave: false,
@@ -40,7 +40,7 @@ server.post('/login', usersController.postLogin);
 server.get('/logout', usersController.logout);
 server.post('/register', usersController.postRegister);
 
-server.get('/', auth, productController.getProducts);
+server.get('/', setLastVisit, auth, productController.getProducts);
 server.get('/new', auth, productController.getAddForm);
 server.get('/update-product/:id', auth, productController.getUpdateProductView);
 server.post('/delete-product/:id', auth, productController.deleteProduct);
